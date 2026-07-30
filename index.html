@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Design Companion — Usability Triage & Prompt Studio (Dark Mode)</title>
+  
+  <!-- Google Fonts: Geist & Geist Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800&family=Geist+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root, html, html.dark {
+      --ground: #000000;
+      --surface: #121212;
+      --surface-solid: #121212;
+      --surface-hover: #1F1F1F;
+      --surface-2: #0A0A0A;
+      --ink: #FFFFFF;
+      --ink-2: #A3A3A3;
+      --ink-3: #737373;
+      --rule: #262626;
+
+      --accent: #FFFFFF;
+      --accent-cyan: #38BDF8;
+      --accent-pink: #F472B6;
+      --accent-soft: #1F1F1F;
+      
+      --critical: #FDA4AF;
+      --critical-soft: #881337;
+      --major: #FDE68A;
+      --major-soft: #78350F;
+      --minor: #A7F3D0;
+      --minor-soft: #064E3B;
+
+      --serif: 'Geist', sans-serif;
+      --sans: 'Geist', sans-serif;
+      --mono: 'Geist Mono', monospace;
+
+      --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--ground);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: row;
+    }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+    }
+
+    /* ---- Fixed Left Sidebar ---- */
+    aside.sidebar {
+      width: 380px;
+      background: #0A0A0A;
+      border-right: 1px solid var(--rule);
+      padding: var(--s5);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s4);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      flex-shrink: 0;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+    }
+    @media (max-width: 900px) {
+      aside.sidebar { width: 100%; height: auto; position: relative; }
+    }
+
+    .sidebar-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: var(--s3);
+      border-bottom: 1px solid var(--rule);
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    /* ---- Main Right Content ---- */
+    main.main-content {
+      flex: 1;
+      min-width: 0;
+      padding: var(--s5) var(--s6);
+      overflow-y: auto;
+    }
+
+    .masthead {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: var(--s4);
+      justify-content: space-between;
+      padding-bottom: var(--s5);
+      border-bottom: 1px solid var(--rule);
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(26px, 3.5vw, 40px);
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-top: var(--s3);
+      color: #F8FAFC;
+    }
+    .standfirst {
+      color: var(--ink-2);
+      max-width: 65ch;
+      margin-top: var(--s3);
+      font-size: 15px;
+    }
+
+    /* ---- Capsule Tabs (Ref Image Design + 3D White Gradient) ---- */
+    .nav-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin: var(--s5) 0;
+    }
+    nav.tabs {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px;
+      background: #141417;
+      border: 1px solid #27272A;
+      border-radius: 9999px;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.8);
+    }
+    nav.tabs button {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      color: #A3A3A3;
+      background: transparent;
+      border: 1px solid transparent;
+      padding: 8px 20px;
+      cursor: pointer;
+      border-radius: 9999px;
+      transition: all 0.2s ease;
+    }
+    nav.tabs button:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    nav.tabs button[aria-selected="true"] {
+      color: #000000;
+      font-weight: 800;
+      background: linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 50%, #E2E8F0 100%);
+      border-color: #FFFFFF;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .nav-action-btn {
+      padding: 8px 20px;
+      border-radius: 9999px;
+      background: #141417;
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #27272A;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      transition: all 0.2s ease;
+    }
+    .nav-action-btn:hover {
+      background: #27272A;
+    }
+
+    .panel[hidden] { display: none; }
+
+    /* ---- Controls & Textarea ---- */
+    textarea, input[type="text"], select {
+      width: 100%;
+      background: #000000;
+      color: var(--ink);
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: var(--s3);
+      font-family: var(--sans);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    textarea {
+      min-height: 240px;
+      resize: vertical;
+      font-family: var(--mono);
+      font-size: 12px;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: var(--s2);
+    }
+
+    .btn {
+      font-family: var(--serif);
+      font-size: 14px;
+      font-weight: 700;
+      color: #0B0F19 !important;
+      padding: 10px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      border: 1px solid #F8FAFC;
+      background: #F8FAFC;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s2);
+    }
+    .btn:hover { background: #E2E8F0; }
+
+    .btn.ghost {
+      background: #000000;
+      color: #F8FAFC !important;
+      border: 1px solid var(--rule);
+    }
+    .btn.ghost:hover { background: #1A1A1A; }
+
+    .status {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: #0284C7;
+      text-align: center;
+    }
+
+    /* ---- Stats & Cards ---- */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s3);
+      margin-bottom: var(--s4);
+    }
+    .stat {
+      background: #000000;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: var(--s3) var(--s4);
+      position: relative;
+    }
+    .stat .n {
+      font-family: var(--mono);
+      font-size: 28px;
+      font-weight: 700;
+      color: #FFFFFF;
+    }
+    .stat .l {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      color: var(--ink-3);
+    }
+    .stat.alarm .n { color: var(--critical); }
+
+    .cards { display: flex; flex-direction: column; gap: var(--s4); }
+    .card {
+      background: #000000;
+      border: 1px solid var(--rule);
+      border-radius: 12px;
+      padding: var(--s5);
+      box-shadow: none;
+    }
+
+    .card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+    .card h3 {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 600;
+      color: #0F172A;
+    }
+
+    .chip {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+    .sev-critical .chip { background: var(--critical-soft); color: var(--critical); }
+    .sev-major .chip { background: var(--major-soft); color: var(--major); }
+    .sev-minor .chip { background: var(--minor-soft); color: var(--minor); }
+
+    .counts {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-2);
+      margin-top: var(--s3);
+      padding-top: var(--s3);
+      border-top: 1px solid var(--rule);
+      display: flex;
+      gap: var(--s4);
+    }
+    .fix { margin-top: var(--s3); }
+    .fix .label, .ev .label {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      text-transform: uppercase;
+      color: #D4D4D4;
+      margin-bottom: var(--s2);
+      font-weight: 600;
+    }
+    .fix ol { margin: 0; padding-left: 20px; color: #D4D4D4; }
+    .ev blockquote {
+      margin: 0 0 var(--s2) 0;
+      padding: var(--s2) var(--s3);
+      background: #000000;
+      border-left: 3px solid #D4D4D4;
+      border-radius: 6px;
+      font-size: 13.5px;
+      color: #E5E5E5;
+    }
+
+    pre.prompt {
+      background: #000000;
+      border: 1px solid var(--rule);
+      border-radius: 10px;
+      padding: var(--s4);
+      font-family: var(--mono);
+      font-size: 12.5px;
+      line-height: 1.7;
+      white-space: pre-wrap;
+      color: #D4D4D4;
+    }
+
+    footer {
+      margin-top: var(--s7);
+      padding-top: var(--s4);
+      border-top: 1px solid var(--rule);
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--ink-3);
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FIXED LEFT SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-head">
+      <span>Input & Upload</span>
+    </div>
+
+    <!-- Upload Card -->
+    <div id="dropzone" style="border: 1px solid var(--rule); border-radius: 16px; padding: 22px 16px; text-align: center; background: #FFFFFF; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+      <input type="file" id="file-input" accept=".vtt,.srt,.txt,.json,.csv,.xlsx" style="display:none;" />
+      
+      <!-- Zoom | Teams Brand Logos Graphic -->
+      <div style="display:flex; justify-content:center; margin-bottom:12px; position:relative; height:54px;">
+        <div style="width:70px; height:52px; background:#F1F5F9; border:1px solid #E2E8F0; border-radius:10px; position:absolute; transform:rotate(-6deg) translateX(-6px); opacity:0.6;"></div>
+        <div style="width:110px; height:52px; background:#FFFFFF; border:1px solid #CBD5E1; border-radius:10px; position:relative; z-index:2; box-shadow:0 3px 10px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; gap:8px; padding:0 8px;">
+          <!-- Zoom Wordmark -->
+          <span style="font-family:sans-serif; font-weight:900; color:#2D8CFF; font-size:14px; letter-spacing:-0.5px;">zoom</span>
+
+          <!-- Divider Line | -->
+          <div style="width:1px; height:22px; background:#CBD5E1;"></div>
+
+          <!-- MS Teams Official Logo -->
+          <svg width="24" height="24" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="17" cy="5.5" r="3" fill="#5B5FC7"/>
+            <circle cx="24" cy="8.5" r="2.5" fill="#464775"/>
+            <path d="M12.5 10H21.5C22.6 10 23.5 10.9 23.5 12V18.5H12.5V10Z" fill="#5B5FC7"/>
+            <path d="M21 12.5H27C27.8 12.5 28.5 13.2 28.5 14V19.5H21V12.5Z" fill="#464775"/>
+            <path d="M3 5.5L14 4V28L3 26.5V5.5Z" fill="#464775"/>
+            <text x="8.5" y="19" font-family="sans-serif" font-weight="bold" font-size="11" fill="white" text-anchor="middle">T</text>
+          </svg>
+        </div>
+      </div>
+
+      <div style="font-family: var(--serif); font-size: 15px; font-weight: 700; color: var(--ink);">
+        Upload Files
+      </div>
+      <div style="font-size: 12px; color: var(--ink-2); margin-top: 4px; line-height: 1.4;">
+        Drag and drop your files here, or <span style="color: #0D9488; font-weight: 600; text-decoration: underline;">click to select</span>.
+      </div>
+      <div style="font-size: 11px; color: var(--ink-3); margin-top: 4px;">
+        Supported formats: .vtt, .srt, .txt, .csv, .xlsx
+      </div>
+    </div>
+
+    <!-- Raw Notes -->
+    <div style="display:flex; flex-direction:column; flex:1; gap:6px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-family:var(--mono); font-size:11px; text-transform:uppercase; color:var(--ink-3); font-weight:600;">Raw Notes</span>
+        <span style="font-family:var(--mono); font-size:10px; color:var(--ink-3);">P1 | note</span>
+      </div>
+      <textarea id="notes" spellcheck="false" placeholder="Paste session notes or drop transcript above..."></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="controls">
+      <button class="btn" id="run">Summarize</button>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:6px;">
+        <button class="btn ghost" id="test-vtt" style="font-size:12px;">Test .VTT</button>
+        <button class="btn ghost" id="reset" style="font-size:12px;">Sample</button>
+      </div>
+      <button class="btn ghost" id="clear" style="font-size:12px; color:var(--critical) !important;">Clear Notes</button>
+      <span class="status" id="status"></span>
+    </div>
+  </aside>
+
+  <!-- RIGHT MAIN CONTENT AREA -->
+  <main class="main-content">
+    <header class="masthead">
+      <div>
+        <h1>Turn 20 messy usability notes into a ranked fix list</h1>
+        <p class="standfirst">A companion for reading session notes from moderated tests, spotting patterns, and deciding what to fix on Monday.</p>
+      </div>
+    </header>
+
+    <div class="nav-wrapper">
+      <nav class="tabs" role="tablist">
+        <button role="tab" id="tab-triage" aria-controls="p-triage" aria-selected="true">Summarize</button>
+        <button role="tab" id="tab-layout" aria-controls="p-layout" aria-selected="false">Brainstorm</button>
+        <button role="tab" id="tab-copy" aria-controls="p-copy" aria-selected="false">UI Copy</button>
+        <button role="tab" id="tab-about" aria-controls="p-about" aria-selected="false">Method</button>
+      </nav>
+      <button class="nav-action-btn" onclick="document.getElementById('export').click();">Export JSON</button>
+    </div>
+
+    <!-- TRIAGE PANEL -->
+    <section class="panel" id="p-triage" role="tabpanel">
+      <button class="btn ghost" id="export" style="display:none;">Export Markdown</button>
+      <div id="out"></div>
+    </section>
+
+    <!-- LAYOUT PANEL -->
+    <section class="panel" id="p-layout" role="tabpanel" hidden>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+        <div style="background:#000000; padding:20px; border:1px solid var(--rule); border-radius:12px;" class="form">
+          <h2>Layout Brief</h2>
+          <label><span class="lt">Screen or flow</span><input type="text" id="l-screen" value="Fare selection for a return ferry trip"></label>
+          <label><span class="lt">Primary job</span><input type="text" id="l-job" value="Let a commuter confirm the right fare and sailing in under 30 seconds"></label>
+          <label><span class="lt">User &amp; situation</span><input type="text" id="l-who" value="Standing at a windy terminal, one hand, poor signal"></label>
+          <label><span class="lt">Hard constraints</span><textarea id="l-cons" style="min-height:80px;">Mobile first, 375pt wide. Must show passenger count, vehicle toggle, outbound and return sailings.</textarea></label>
+          <label><span class="lt">Known problems</span><textarea id="l-probs" style="min-height:80px;">Users miss that they picked one-way. Price ambiguity.</textarea></label>
+          <label><span class="lt">How many directions</span><select id="l-count"><option>3</option><option selected>4</option><option>5</option></select></label>
+          <div style="margin-top:12px;"><button class="btn" data-build="layout">Build prompt</button><span class="status" id="l-status"></span></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>Prompt</h2><button class="btn ghost" data-copy="l-out">Copy</button>
+          </div>
+          <pre class="prompt" id="l-out"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- COPY PANEL -->
+    <section class="panel" id="p-copy" role="tabpanel" hidden>
+      <div style="display:grid; grid-template-columns: 1fr 1fr; gap:24px;">
+        <div style="background:#000000; padding:20px; border:1px solid var(--rule); border-radius:12px;" class="form">
+          <h2>Copy Brief</h2>
+          <label><span class="lt">Element</span><select id="c-kind"><option>Error message</option><option>Empty state</option></select></label>
+          <label><span class="lt">Ground truth</span><textarea id="c-what" style="min-height:80px;">Payment was declined by card issuer. Reason unknown. Nothing charged.</textarea></label>
+          <label><span class="lt">User goal</span><input type="text" id="c-goal" value="Buy a return ticket for 17:40 sailing"></label>
+          <label><span class="lt">Next steps</span><input type="text" id="c-next" value="Try a different card, or pay at desk"></label>
+          <div style="margin-top:12px;"><button class="btn" data-build="copy">Build prompt</button><span class="status" id="c-status"></span></div>
+        </div>
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <h2>Prompt</h2><button class="btn ghost" data-copy="c-out">Copy</button>
+          </div>
+          <pre class="prompt" id="c-out"></pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT PANEL -->
+    <section class="panel prose" id="p-about" role="tabpanel" hidden style="background:#000000; padding:28px; border:1px solid var(--rule); border-radius:12px;">
+      <h2>About Design Companion</h2>
+      <p>Design Companion combines a transparent usability triage engine with prompt builders for wireframing and UX copy.</p>
+      <div style="background:var(--surface-2); padding:16px; border-radius:8px; margin:16px 0; font-family:var(--mono); font-size:12px;">
+        <b>Severity Formula:</b> (2 × Blocking) + (1.5 × Notes) + Participant Spread
+      </div>
+    </section>
+
+    <footer>
+      <span>Design Companion · Fixed Left Navigation Layout</span>
+      <span>Shadcn UI v4.15</span>
+    </footer>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+
+    var SAMPLE = [
+      "P1 | Tapped the big blue Buy button and nothing seemed to happen for about five seconds, so I tapped it three more times.",
+      "P1 | I couldn't tell whether my card had actually been charged — no receipt appeared anywhere.",
+      "P1 | The departure time is in tiny grey text, I had to hold the phone right up to my face.",
+      "P2 | I went looking for my saved tickets under Account and they were actually under a Wallet icon I hadn't noticed.",
+      "P2 | It let me pick a return sailing that was earlier than my outbound one and only complained after I paid.",
+      "P2 | \"Concession fare\" — I have no idea if a student counts as that.",
+      "P3 | I accidentally deleted a ticket and there was no way to get it back.",
+      "P3 | The seat map kept scrolling under my finger while I was trying to pick a seat.",
+      "P3 | Loading spinner ran for a long time on the timetable screen with no indication of progress.",
+      "P4 | Had to type my card details again even though I bought a ticket last week on the same phone.",
+      "P4 | The phone number field rejected my number because of the spaces and just said \"Invalid\".",
+      "P4 | I wasn't sure if the price shown included the vehicle or just me as a passenger.",
+      "P4 | Contrast on the disabled Continue button is so low I thought the app had frozen.",
+      "P5 | Searched for \"Rothesay\" and got no results because the stop is listed as \"Rothesay Pier\".",
+      "P5 | There's no way back from the payment screen except closing the whole app.",
+      "P5 | It said \"Booking failed\" but not why, so I just tried the same thing again.",
+      "P5 | The QR code screen times out and you have to re-authenticate at the gate, which is stressful.",
+      "P6 | I missed that I'd selected a one-way trip until I was at the terminal.",
+      "P6 | Date picker defaults to today but the first available sailing is tomorrow, which is confusing.",
+      "P6 | Tiny tap targets on the passenger count stepper, I kept hitting the wrong one."
+    ].join("\n");
+
+    var SAMPLE_VTT = [
+      "WEBVTT", "",
+      "1", "00:01:15.000 --> 00:01:20.000",
+      "Participant 1 (Sarah): I tapped the big blue Buy button and nothing happened for 5 seconds.", "",
+      "2", "00:01:25.000 --> 00:01:30.000",
+      "Participant 1 (Sarah): No, I couldn't tell whether my card was charged because no receipt appeared.", "",
+      "3", "00:02:10.000 --> 00:02:15.000",
+      "Participant 2 (Alex): I went looking for my saved tickets under Account and they were under Wallet."
+    ].join("\n");
+
+    function sig(pattern, weight) { return { re: new RegExp(pattern, "i"), w: weight }; }
+
+    var THEMES = [
+      {
+        id: "status",
+        name: "The system never says what it is doing",
+        heuristic: "Visibility of system status",
+        signals: [
+          sig("nothing (seemed to )?happen", 3), sig("spinner|loading|progress", 3),
+          sig("no indication|no feedback|didn't tell me|couldn't tell", 3),
+          sig("frozen|froze|hung|unresponsive", 2), sig("receipt|confirmation", 2)
+        ],
+        fixes: [
+          { re: /spinner|loading|progress/i, text: "Replace indeterminate spinner with determinate state (“Checking sailings — 2 of 3”)." },
+          { re: /nothing (seemed to )?happen|tapped/i, text: "Put primary action into immediate pending state on tap." }
+        ]
+      },
+      {
+        id: "errors",
+        name: "Errors arrive late, unexplained, and can't be undone",
+        heuristic: "Error prevention, recognition &amp; recovery",
+        signals: [
+          sig("only complained after|after i paid|too late", 4),
+          sig("no way to get it back|couldn't undo|no undo|accidentally delet", 4),
+          sig("failed|error|rejected|invalid|declined", 3)
+        ],
+        fixes: [
+          { re: /only complained after|after i paid/i, text: "Move validation forward: block impossible return sailings at selection." },
+          { re: /accidentally delet|get it back/i, text: "Make ticket deletion recoverable — soft-delete with a 10-second undo toast." }
+        ]
+      },
+      {
+        id: "nav",
+        name: "People can't find what they know is there",
+        heuristic: "Findability, navigation &amp; IA",
+        signals: [
+          sig("went looking|looking for|couldn't find|where (is|are)", 4),
+          sig("no way back|except closing|no back", 4)
+        ],
+        fixes: [
+          { re: /no way back|except closing/i, text: "Give payment screen an explicit exit preserving basket." }
+        ]
+      }
+    ];
+
+    var BLOCKERS = /no way|couldn'?t|can'?t|failed|declined|accidentally delet|frozen|nothing seemed|closing the whole app|only complained after|re-?authenticate|no results|missed that|invalid|rejected|too late/i;
+
+    function parse(raw) {
+      var out = [];
+      raw.split(/\r?\n/).forEach(function (line, i) {
+        var t = line.trim();
+        if (!t) return;
+        var m = t.match(/^([A-Za-z0-9_.\-]{1,12})\s*[|:\t]\s*(.+)$/);
+        out.push({
+          participant: m ? m[1].toUpperCase() : "N" + (i + 1),
+          text: m ? m[2].trim() : t
+        });
+      });
+      return out;
+    }
+
+    function classify(note) {
+      var best = null;
+      THEMES.forEach(function (theme) {
+        var score = 0;
+        theme.signals.forEach(function (s) { if (s.re.test(note.text)) score += s.w; });
+        if (score > 0 && (!best || score > best.score)) best = { theme: theme, score: score };
+      });
+      return best;
+    }
+
+    function analyse(raw) {
+      var notes = parse(raw);
+      var buckets = {}, unmatched = [];
+
+      notes.forEach(function (note) {
+        var hit = classify(note);
+        if (!hit) { unmatched.push(note); return; }
+        var b = buckets[hit.theme.id] || (buckets[hit.theme.id] = { theme: hit.theme, notes: [], blockers: 0, people: {} });
+        b.notes.push(note);
+        b.people[note.participant] = true;
+        if (BLOCKERS.test(note.text)) b.blockers++;
+      });
+
+      var themes = Object.keys(buckets).map(function (k) {
+        var b = buckets[k];
+        var people = Object.keys(b.people);
+        var score = (2 * b.blockers) + (1.5 * b.notes.length) + people.length;
+        b.people = people;
+        b.score = Math.round(score * 10) / 10;
+        b.severity = score >= 14 ? "critical" : score >= 9 ? "major" : "minor";
+        return b;
+      }).sort(function (a, b) { return b.score - a.score; });
+
+      var everyone = {};
+      notes.forEach(function (n) { everyone[n.participant] = true; });
+
+      return { notes: notes, themes: themes, unmatched: unmatched, participants: Object.keys(everyone).length };
+    }
+
+    var SEV_LABEL = { critical: "Critical", major: "Major", minor: "Minor" };
+    var out = document.getElementById("out");
+    var last = null;
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function fixesFor(bucket) {
+      var joined = bucket.notes.map(function (n) { return n.text; }).join(" ");
+      var picked = bucket.theme.fixes.filter(function (f) { return f.re.test(joined); });
+      if (!picked.length) picked = bucket.theme.fixes.slice(0, 1);
+      return picked.slice(0, 3);
+    }
+
+    function render(result) {
+      if (!result.notes.length) {
+        out.innerHTML = '<p style="padding:24px; text-align:center; color:var(--ink-3);">No notes. Paste notes on left sidebar or click Summarize.</p>';
+        return;
+      }
+
+      var criticals = result.themes.filter(function (t) { return t.severity === "critical"; }).length;
+      var counts = { critical: 0, major: 0, minor: 0 };
+      result.themes.forEach(function (t) { counts[t.severity] += t.notes.length; });
+      var total = result.notes.length;
+
+      var html = '<div class="stats">' +
+        stat(total, "notes read") +
+        stat(result.participants, "participants") +
+        stat(result.themes.length, "themes found") +
+        stat(criticals, "critical", criticals > 0) +
+        '</div>';
+
+      html += '<div class="sticky-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:24px; padding-top:12px;">';
+      result.themes.forEach(function (t, index) {
+        var palette = { bg: "#FDC770", border: "#DDA24A", text: "#1E1402" };
+        var uniqueId = 'detail-' + t.theme.id;
+
+        html += '<article class="sticky-card" style="position:relative; background:' + palette.bg + '; border:1px solid ' + palette.border + '; border-radius:28px; padding:24px; color:' + palette.text + '; display:flex; flex-direction:column; justify-content:space-between; min-height:260px; transition:all 0.3s ease;">' +
+          '<div style="flex-1;">' +
+          '<h3 style="font-size:18px; font-weight:700; line-height:1.25; margin-bottom:6px; color:' + palette.text + ';">' + t.theme.name + '</h3>' +
+          '<div style="font-size:11px; font-family:var(--mono); text-transform:uppercase; opacity:0.75; font-weight:bold; letter-spacing:0.05em; margin-bottom:12px;">' + t.theme.heuristic + '</div>' +
+
+          // Permanently expanded detail section
+          '<div style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.1);">' +
+            '<div style="font-size:10px; font-family:var(--mono); font-weight:bold; text-transform:uppercase; opacity:0.8; margin-bottom:6px;">Recommended fixes</div>' +
+            '<ul style="list-style:none; padding:0; margin:0 0 16px 0;">' +
+              fixesFor(t).map(function (f) { return '<li style="background:rgba(0,0,0,0.05); padding:8px; border-radius:6px; font-size:12px; margin-bottom:6px; font-weight:500;">✓ ' + f.text + '</li>'; }).join('') +
+            '</ul>' +
+            '<div style="font-size:10px; font-family:var(--mono); font-weight:bold; text-transform:uppercase; opacity:0.8; margin-bottom:6px;">Verbatim quotes</div>' +
+            t.notes.slice(0, 2).map(function (n) {
+              return '<blockquote style="background:rgba(0,0,0,0.05); border-left:3px solid rgba(0,0,0,0.3); padding:8px; border-radius:6px; font-size:11.5px; margin-bottom:6px; font-style:italic;">"' + esc(n.text) + '"<span style="display:block; font-size:9px; font-weight:bold; opacity:0.7; margin-top:2px;">— ' + esc(n.participant) + '</span></blockquote>';
+            }).join('') +
+          '</div>' +
+          '</div>' +
+
+          // Card footer
+          '<div style="display:flex; justify-content:space-between; align-items:center; margin-top:24px; padding-top:12px; border-top:1px solid rgba(0,0,0,0.05); font-family:var(--mono); font-size:10px; font-weight:bold; opacity:0.8;">' +
+            '<div>' + t.notes.length + ' NOTES · ' + t.people.length + ' PEOPLE</div>' +
+            '<span style="background:#000000; color:#ffffff; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:bold; text-transform:uppercase;">' + t.severity + '</span>' +
+          '</div>' +
+          '</article>';
+      });
+      html += '</div>';
+
+      out.innerHTML = html;
+    }
+
+    function stat(n, label, alarm) {
+      return '<div class="stat' + (alarm ? ' alarm' : '') + '"><div class="n">' + n + '</div><div class="l">' + label + '</div></div>';
+    }
+
+    function parseTranscriptText(content) {
+      var text = content.replace(/^WEBVTT.*$/gm, "").replace(/^\d+$/gm, "").replace(/\d{2}:\d{2}:\d{2}[\.,]\d{3}\s*-->\s*\d{2}:\d{2}:\d{2}[\.,]\d{3}/g, "");
+      var lines = text.split(/\r?\n/).map(function(l) { return l.trim(); }).filter(Boolean);
+      var speakerMap = {};
+      var pCounter = 1;
+      var result = [];
+
+      lines.forEach(function(line) {
+        var match = line.match(/^(?:speaker\s*\d+|participant\s*\d+[\w\s\(\)]*|[A-Z][a-z0-9_\-\s\(\)]+|\w+[\s\w]*)\s*[:|]/i);
+        if (match) {
+          var rawSpeaker = match[0].replace(/[:|]/, "").trim();
+          var speech = line.substring(match[0].length).trim();
+          if (!speech) return;
+          if (/^(moderator|interviewer|host)/i.test(rawSpeaker)) return;
+
+          var key = rawSpeaker.toLowerCase();
+          var pid = speakerMap[key];
+          if (!pid) {
+            var pMatch = rawSpeaker.match(/P(\d+)/i) || rawSpeaker.match(/Participant\s*(\d+)/i);
+            pid = pMatch ? "P" + pMatch[1] : "P" + (pCounter++);
+            speakerMap[key] = pid;
+          }
+          result.push(pid + " | " + speech);
+        } else if (line.length > 5) {
+          result.push("P1 | " + line);
+        }
+      });
+      return result.join("\n");
+    }
+
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute("aria-selected", on ? "true" : "false");
+          document.getElementById(t.getAttribute("aria-controls")).hidden = !on;
+        });
+      });
+    });
+
+    var notesEl = document.getElementById("notes");
+    var statusEl = document.getElementById("status");
+
+    function run() {
+      last = analyse(notesEl.value);
+      render(last);
+      statusEl.textContent = last.notes.length ? last.notes.length + " notes → " + last.themes.length + " themes" : "";
+    }
+
+    document.getElementById("run").addEventListener("click", run);
+    document.getElementById("reset").addEventListener("click", function () { notesEl.value = SAMPLE; run(); });
+    document.getElementById("clear").addEventListener("click", function () { notesEl.value = ""; last = null; render({ notes: [], themes: [], unmatched: [], participants: 0 }); statusEl.textContent = ""; });
+
+    var dropzone = document.getElementById("dropzone");
+    var fileInput = document.getElementById("file-input");
+    if (dropzone && fileInput) {
+      dropzone.addEventListener("click", function() { fileInput.click(); });
+      dropzone.addEventListener("dragover", function(e) { e.preventDefault(); });
+      dropzone.addEventListener("drop", function(e) {
+        e.preventDefault();
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(evt) { notesEl.value = parseTranscriptText(evt.target.result); run(); };
+          reader.readAsText(e.dataTransfer.files[0]);
+        }
+      });
+      fileInput.addEventListener("change", function() {
+        if (fileInput.files && fileInput.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function(evt) { notesEl.value = parseTranscriptText(evt.target.result); run(); };
+          reader.readAsText(fileInput.files[0]);
+        }
+      });
+    }
+
+    document.getElementById("test-vtt").addEventListener("click", function() {
+      notesEl.value = parseTranscriptText(SAMPLE_VTT); run();
+    });
+
+    notesEl.value = SAMPLE;
+    run();
+  })();
+  </script>
+</body>
+</html>
