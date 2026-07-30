@@ -15,7 +15,7 @@ Built with Next.js and Shadcn UI, it features an automated classification engine
 2. PROTOTYPE DETAILS & PUBLIC LINKS
 ---------------------------------------------------
 - Prototype Title: Design Companion (Usability Triage & Prompt Studio)
-- Public Live Link: https://panamparanarasu.github.io/Design-Companion/design-companion.html
+- Public Live Link: https://panamparanarasu.github.io/Design-Companion/
 - Public GitHub Repository: https://github.com/PanamparanArasu/Design-Companion
 - Tech Stack: Next.js 16, Shadcn UI, Tailwind CSS, Framer Motion, Geist Fonts
 
