@@ -1,0 +1,41 @@
+DESIGN COMPANION — AI PROTOTYPE SUBMISSION PACKAGE
+===================================================
+
+CHALLENGE 1: DESIGN COMPANION
+Develop an AI prototype that brainstorms layouts, generates UI copy, or summarizes usability feedback.
+
+---------------------------------------------------
+1. SHORT SUMMARY (83 words)
+---------------------------------------------------
+Design Companion is an AI-powered triage and design workbench that transforms raw, unorganized usability session notes into actionable, heuristic-mapped fix lists, layout exploration briefs, and UX copy options.
+
+Built with Next.js and Shadcn UI, it features an automated classification engine mapping feedback to Nielsen’s 10 Heuristics with a deterministic severity score (2 × Blockers + 1.5 × Notes + Spread). It accepts Zoom/Teams .vtt transcripts, displays clean sticky-note feedback cards, and includes dynamic prompt generators for instant wireframing and microcopy iterations.
+
+---------------------------------------------------
+2. PROTOTYPE DETAILS & PUBLIC LINKS
+---------------------------------------------------
+- Prototype Title: Design Companion (Usability Triage & Prompt Studio)
+- Public Live Link: https://panamparanarasu.github.io/Design-Companion/design-companion.html
+- Public GitHub Repository: https://github.com/PanamparanArasu/Design-Companion
+- Tech Stack: Next.js 16, Shadcn UI, Tailwind CSS, Framer Motion, Geist Fonts
+
+---------------------------------------------------
+3. PUBLIC DATASET & INPUT FORMATS
+---------------------------------------------------
+- Sample Dataset: 20 usability testing session notes across 6 participants evaluating digital ticketing flows.
+- Transcript Compatibility: Automated parsing of Zoom and MS Teams (.vtt, .srt, .txt, .csv, .xlsx) meeting transcripts.
+
+---------------------------------------------------
+4. KEY PROTOTYPE HIGHLIGHTS
+---------------------------------------------------
+1. Automated Heuristic Triage:
+   Scans session transcripts, removes moderator chatter, maps pain points to Nielsen's 10 Heuristics, and ranks issues by impact.
+
+2. Sticky Note Synthesis Board:
+   Visualizes research findings on clean #FDC770 golden-yellow sticky notes over a pitch-black OLED #000000 canvas.
+
+3. Layout Exploration Studio:
+   Generates structured prompts for 4 distinct wireframe layout directions given screen goals and mobile constraints.
+
+4. UX Copy Studio:
+   Drafts clear, plain-language error messages, empty states, and button CTAs under strict word-count limits.
